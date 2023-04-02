@@ -1,2 +1,5 @@
 # gamedev-pyved
-High-Tech game creation tool based on Python. Fully Open-Source!
+game creation tool (+visual editor) based on Python. 
+**Fully Open-Source!**
+
+Feel free to contribute<3

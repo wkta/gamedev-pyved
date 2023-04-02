@@ -1,0 +1,4 @@
+
+example by Vladimir Kaukin
+
+https://github.com/ikvk/ecs_pattern
