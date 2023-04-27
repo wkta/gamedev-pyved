@@ -1,4 +1,8 @@
 from distutils.core import setup
+import sys
+sys.path.append('src')
+from pyved.ver_info import version_num
+
 
 setup(
     name="pyved",
@@ -13,5 +17,5 @@ setup(
 
     description='experimental toolbox for game devs who use python',
     license='MIT',
-    version=str('0.0.1'),
+    version=str(version_num),
 )
