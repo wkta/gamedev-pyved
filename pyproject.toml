@@ -1,10 +1,10 @@
 [tool.poetry]
-name = "gamedev-pyved"
-version = "0.1.0"
+name = "pyved"
+version = "0.0.3"
 description = ""
-authors = ["wkta-tom <thomas.iw@kata.games>"]
+authors = ["moonb3ndr <thomas.iw@kata.games>"]
 readme = "README.md"
-packages = [{include = "gamedev_pyved", from = "src"}]
+packages = [{include = "pyved", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
