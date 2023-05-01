@@ -18,4 +18,10 @@ setup(
     description='experimental toolbox for game devs who use python',
     license='MIT',
     version=str(version_num),
+
+    entry_points={
+        'console_scripts': [
+            'pyved = pyved.__main__:main'
+        ]
+    }
 )
