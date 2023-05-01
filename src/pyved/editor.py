@@ -11,7 +11,7 @@ from . import menu_bar_ev_handler
 
 from .pong.pong import PongGame
 import os  # so i can open file to read src code!
-
+import pathlib
 
 PONG_WINDOW_SELECTED = pygame.event.custom_type()
 
@@ -22,10 +22,10 @@ KTG_W, KTG_H = 960, 720
 POS_PREVIEW = (200, 0)
 
 target_dir = None
-target_file = None
+target_file = 'ERR_NO_FILE'
 
 
-class PongWindow(UIWindow):
+class GamePreview(UIWindow):
     def __init__(self, gamename, position, ui_manager):
         super().__init__(pygame.Rect(position, (KTG_W+32, KTG_H+59)), ui_manager,
                          window_display_title=gamename,
@@ -69,6 +69,10 @@ class PongWindow(UIWindow):
         self.pong_game.draw(self.game_surface_element.image)
 
 
+def gen_edition_title(file, project_name):
+    return file+f"({project_name}) source-code"
+
+
 class MiniGamesApp:
     def __init__(self):
         pygame.init()
@@ -81,7 +85,7 @@ class MiniGamesApp:
         self.clock = pygame.time.Clock()
         self.is_running = True
 
-        self.pong_window_1 = PongWindow(
+        self.pong_window_1 = GamePreview(
             'Pong demo',
             POS_PREVIEW,
             self.ui_manager
@@ -90,13 +94,18 @@ class MiniGamesApp:
         self.pong_window_1.is_active = True
 
         # --------- text edition related stuff -------------
-        notepad_window = UIWindow(pygame.Rect(50, 20, 300, 400), window_display_title="Pygame Notepad")
-        output_window = UIWindow(pygame.Rect(400, 20, 300, 400), window_display_title="Pygame GUI Formatted Text")
+        if target_dir is not None:
+            path = pathlib.PurePath(target_dir)
+            pure_dir = path.name
+        else:
+            pure_dir = '??'
+        self.notepad_window = UIWindow(pygame.Rect(50, 20, 380, 400), window_display_title=gen_edition_title(target_file, pure_dir))
+        output_window = UIWindow(pygame.Rect(440, 20, 380, 400), window_display_title="Pygame GUI Formatted Text")
 
         self.text_entry_box = UITextEntryBox(  # swap to editable text box
-                relative_rect=pygame.Rect((0, 0), notepad_window.get_container().get_size()),
+                relative_rect=pygame.Rect((0, 0), self.notepad_window.get_container().get_size()),
                 initial_text="",
-                container=notepad_window)
+                container=self.notepad_window)
 
         self.text_output_box = UITextBox(
                 relative_rect=pygame.Rect((0, 0), output_window.get_container().get_size()),
@@ -134,6 +143,46 @@ class MiniGamesApp:
 ##                        self.pong_window_1.is_active = False
                 elif event.type == UI_TEXT_ENTRY_CHANGED and event.ui_element == self.text_entry_box:
                     self.text_output_box.set_text(event.text)
+
+                # --- open pyved.json --- {
+                elif (event.type == pygame_gui.UI_FILE_DIALOG_PATH_PICKED and
+                        event.ui_object_id == '#open_file_dialog'):
+                    path = pathlib.Path(event.text)
+                    p = pathlib.PurePath(event.text)
+                    filename = p.name
+                    print(path.parent)
+                    p2 = pathlib.PurePath(path.parent)
+                    adhoc_dir = p2.name
+
+                    self.menu_bar_event_handler.last_used_file_path = path.parent
+                    try:
+                        self.notepad_window.set_display_title(gen_edition_title(filename, adhoc_dir))
+                        with open(str(path), 'r') as fptr:
+                            self.text_entry_box.set_text(fptr.read())
+##                        loaded_image = pygame.image.load(str(path)).convert_alpha()
+##
+##                        canvas_window_rect = pygame.Rect(200, 25,
+##                                                         min(loaded_image.get_width() + 52,
+##                                                             self.window_surface.get_width() - 200),
+##                                                         min(loaded_image.get_height() + 82,
+##                                                             self.window_surface.get_height() - 25))
+##
+##                        window = CanvasWindow(rect=canvas_window_rect,
+##                                              manager=self.ui_manager,
+##                                              image_file_name=path.name,
+##                                              image=loaded_image)
+##
+##                        window.canvas_ui.set_active_tool(self.tool_bar_window.get_active_tool())
+##                        window.canvas_ui.set_save_file_path(path)
+                    except pygame.error:
+                        message_rect = pygame.Rect(0, 0, 250, 160)
+                        message_rect.center = self.window_surface.get_rect().center
+                        message_window = UIMessageWindow(rect=message_rect,
+                                                         html_message='Unable to load image.',
+                                                         manager=self.ui_manager,
+                                                         window_title='Loading error')
+                        message_window.set_blocking(True)
+                    # fin open pyved.json
 
             self.ui_manager.update(time_delta)
 

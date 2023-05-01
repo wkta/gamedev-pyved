@@ -95,3 +95,7 @@ def main():
 
     else:
         print(f"ERROR: command {args.command} is not a valid command!")
+
+
+if __name__=='__main__':
+    main()
