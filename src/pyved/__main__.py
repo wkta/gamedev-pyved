@@ -13,10 +13,10 @@ parser = argparse.ArgumentParser(
 # besoin d'utiliser des sub parsers car on a plusieurs cmd
 subparser = parser.add_subparsers(dest='command', required=True)
 new = subparser.add_parser('new')
-new.add_argument('--project', type=str, required=True)
+new.add_argument('project', type=str)#, required=True)
 
 register = subparser.add_parser('open')
-register.add_argument('--filepath', type=str, required=True)
+register.add_argument('filepath', type=str)#, required=True)
 
 cmd = subparser.add_parser('version')
 # -- fin configuration
@@ -83,9 +83,12 @@ def main():
     elif args.command == 'open':
         filepath = os.path.abspath(args.filepath)
         dirname = os.path.dirname(filepath)
-        fptr = open(filepath, 'r')
-        open_project(fptr, dirname)
-        fptr.close()
+        if not os.path.isfile(os.path.join(dirname, filepath)):
+            print(f"ERROR: cannot read the file {filepath}, please provide a valid pyved.json FILE")
+        else:
+            fptr = open(filepath, 'r')
+            open_project(fptr, dirname)
+            fptr.close()
 
     elif args.command == 'version':
         print(f"PYVED - version {pyved_ver_num}")
