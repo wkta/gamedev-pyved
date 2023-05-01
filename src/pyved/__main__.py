@@ -17,6 +17,8 @@ new.add_argument('--project', type=str, required=True)
 
 register = subparser.add_parser('open')
 register.add_argument('--filepath', type=str, required=True)
+
+cmd = subparser.add_parser('version')
 # -- fin configuration
 
 
@@ -84,6 +86,9 @@ def main():
         fptr = open(filepath, 'r')
         open_project(fptr, dirname)
         fptr.close()
+
+    elif args.command == 'version':
+        print(f"PYVED - version {pyved_ver_num}")
 
     else:
         print(f"ERROR: command {args.command} is not a valid command!")
