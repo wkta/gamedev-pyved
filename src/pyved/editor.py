@@ -1,14 +1,15 @@
 import pygame
 import pygame_gui
 
-from pygame_gui.ui_manager import UIManager
-from pygame_gui.elements.ui_window import UIWindow
+# from pygame_gui.ui_manager import UIManager
+# from pygame_gui.elements.ui_window import UIWindow
 from pygame_gui.elements.ui_image import UIImage
 from pygame_gui import UIManager, UI_TEXT_ENTRY_CHANGED
 from pygame_gui.elements import UIWindow, UITextEntryBox, UITextBox
+from .menu_bar_gui import UIMenuBar, menu_data
+from . import menu_bar_ev_handler
 
 from .pong.pong import PongGame
-
 import os  # so i can open file to read src code!
 
 
@@ -76,7 +77,7 @@ class MiniGamesApp:
 
         self.background_surface = pygame.Surface((APP_W, APP_H)).convert()
         self.background_surface.fill(pygame.Color('#505050'))
-        self.ui_manager = UIManager((APP_W, APP_H), 'data/themes/theme_3.json')
+        self.ui_manager = UIManager((APP_W, APP_H), 'data/ui_theme.json')
         self.clock = pygame.time.Clock()
         self.is_running = True
 
@@ -88,12 +89,11 @@ class MiniGamesApp:
         # self.pong_window_2 = PongWindow((50, 50), self.ui_manager)
         self.pong_window_1.is_active = True
 
-        # - text related stuff
+        # --------- text edition related stuff -------------
         notepad_window = UIWindow(pygame.Rect(50, 20, 300, 400), window_display_title="Pygame Notepad")
         output_window = UIWindow(pygame.Rect(400, 20, 300, 400), window_display_title="Pygame GUI Formatted Text")
 
-        # swap to editable text box
-        self.text_entry_box = UITextEntryBox(
+        self.text_entry_box = UITextEntryBox(  # swap to editable text box
                 relative_rect=pygame.Rect((0, 0), notepad_window.get_container().get_size()),
                 initial_text="",
                 container=notepad_window)
@@ -107,6 +107,12 @@ class MiniGamesApp:
             with open(thefile, 'r') as fptr:
                 self.text_entry_box.set_text(fptr.read())
 
+        # -------------- menu bar related stuff ------------------
+        self.menu_bar = UIMenuBar(relative_rect=pygame.Rect(0, 0, 1280, 25),
+                                  menu_item_data=menu_data,
+                                  manager=self.ui_manager)
+        self.menu_bar_event_handler = menu_bar_ev_handler.MenuBarEventHandler(self.root_window_surface, self.ui_manager)
+
     def run(self):
         while self.is_running:
             time_delta = self.clock.tick(60)/1000.0
@@ -116,6 +122,9 @@ class MiniGamesApp:
                     self.is_running = False
 
                 self.ui_manager.process_events(event)
+
+                # use the menu bar also!
+                self.menu_bar_event_handler.process_event(event)
 
                 if event.type == PONG_WINDOW_SELECTED:
                     event.ui_element.is_active = True
