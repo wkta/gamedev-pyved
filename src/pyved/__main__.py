@@ -35,6 +35,13 @@ def create_new_project(pname):
             fout.write(' '*4 + '"project":'+DB_QT+pname+DB_QT+",\n")
             fout.write("}")
 
+        # main source-code file
+        with open(os.path.join(target_dir, 'main.py'), 'w') as fout:
+            fout.write("import katagames_engine as kengi")
+            fout.write("\n")
+            fout.write("kengi.init()")
+
+
 def open_project(desc_ptr, dirname):
     print('*'*32)
     print(' Welcome to PYVED')
@@ -47,9 +54,19 @@ def open_project(desc_ptr, dirname):
     print('Listing files:')
     
     t_dir = Path(dirname)
+    has_main = False
     for entry in t_dir.iterdir():
         print(entry.name)
+        if 'main.py' == entry.name:
+            has_main = True
+    if not has_main:
+        raise Exception('invalid project format! main.py not found in the project folder')
 
+    # ouverture projet avec format valide ds l'editor
+    from . import editor
+    editor.target_dir = dirname
+    editor.target_file = 'main.py'
+    editor.run_editor()
 # }} definition implem
 
 
