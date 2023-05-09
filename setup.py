@@ -5,7 +5,7 @@ from setuptools import setup
 
 
 sys.path.append('src')
-from pyved.ver_info import version_num
+import pyved
 
 # - fetch data from requirements.txt
 with open('requirements.txt') as f:
@@ -36,8 +36,8 @@ setup(
     include_package_data=True,  # to be sure we get _sm_shelf/legacy.py, etc.
 
     description='experimental toolbox for game devs who use python',
-    license='MIT',
-    version=str(version_num),
+    license='LGPL-3.0',
+    version=str(pyved.__version__),
 
     entry_points={
         'console_scripts': [

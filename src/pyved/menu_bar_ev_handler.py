@@ -6,7 +6,7 @@ import pygame
 from pygame_gui.windows import UIFileDialog, UIMessageWindow
 from pygame_gui import UI_BUTTON_START_PRESS, UI_WINDOW_MOVED_TO_FRONT, UI_WINDOW_CLOSE
 from pygame_gui import UI_FILE_DIALOG_PATH_PICKED
-from .ver_info import version_num as pyved_ver_num
+from . import __version__ as pyved_ver_num
 # from ui.ui_canvas_window import CanvasWindow
 # from ui.ui_new_canvas_dialog import UINewCanvasDialog
 # from tools.undo_record import UndoRecord

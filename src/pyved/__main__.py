@@ -1,7 +1,7 @@
 import argparse
 from pathlib import Path
 import os
-from .ver_info import version_num as pyved_ver_num
+from . import __version__ as pyved_ver_num
 
 
 parser = argparse.ArgumentParser(
