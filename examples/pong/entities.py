@@ -1,6 +1,5 @@
-from ecs_pattern import entity
-
 from components import ComMotion, ComScore, ComTeam, ComVisible, ComWait
+from pyved import entity
 
 
 @entity

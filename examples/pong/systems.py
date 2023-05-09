@@ -1,18 +1,18 @@
-from typing import Callable
 from random import uniform, choice
+from typing import Callable
 
 import pygame
 from pygame import Surface
-from pygame.rect import Rect
-from pygame.event import Event
 from pygame.display import Info as VideoInfo
+from pygame.event import Event
 from pygame.locals import QUIT, KEYDOWN, KEYUP, K_ESCAPE, K_UP, K_DOWN, K_w, K_s, K_SPACE
-from ecs_pattern import System, EntityManager
+from pygame.rect import Rect
 
 from components import ComMotion, ComVisible
-from entities import Ball, GameStateInfo, Racket, Score, Table, TeamScoredGoalEvent, WaitForBallMoveEvent, Spark
-from sprites import ball_sprite, racket_sprite, table_sprite, score_sprite, spark_sprite
 from consts import Team, BALL_SIZE, RACKET_WIDTH, RACKET_HEIGHT, RACKET_SPEED, BALL_SPEED_MIN
+from entities import Ball, GameStateInfo, Racket, Score, Table, TeamScoredGoalEvent, WaitForBallMoveEvent, Spark
+from pyved import System, EntityManager
+from sprites import ball_sprite, racket_sprite, table_sprite, score_sprite, spark_sprite
 
 
 def set_random_ball_speed(ball: Ball, screen_info: VideoInfo, x_direction: int):
@@ -26,7 +26,7 @@ class SysInit(System):
     def __init__(self, entities: EntityManager):
         self.entities = entities
 
-    def start(self):
+    def initialize(self):
         screen_info = pygame.display.Info()
         self.entities.init(
             TeamScoredGoalEvent(Team.LEFT),
@@ -80,7 +80,7 @@ class SysInit(System):
         )
         print('Ping')
 
-    def stop(self):
+    def cleanup(self):
         print('Pong')
 
 
@@ -89,10 +89,10 @@ class SysMovement(System):
         self.entities = entities
         self.game_state_info = None
 
-    def start(self):
+    def initialize(self):
         self.game_state_info = next(self.entities.get_by_class(GameStateInfo))
 
-    def update(self):
+    def proc(self):
         if self.game_state_info.pause:
             return
         # get entities
@@ -158,7 +158,7 @@ class SysGoal(System):
     def __init__(self, entities: EntityManager):
         self.entities = entities
 
-    def update(self):
+    def proc(self):
         team_scored_goal_event: TeamScoredGoalEvent = next(self.entities.get_by_class(TeamScoredGoalEvent), None)
         if team_scored_goal_event:
             score_entity: Score
@@ -174,7 +174,7 @@ class SysRoundStarter(System):
         self.entities = entities
         self.clock = clock
 
-    def update(self):
+    def proc(self):
         wait_for_ball_move_event: WaitForBallMoveEvent = next(self.entities.get_by_class(WaitForBallMoveEvent), None)
         if wait_for_ball_move_event:
             wait_for_ball_move_event.wait_ms -= self.clock.get_time()
@@ -192,10 +192,10 @@ class SysControl(System):
         self.game_state_info = None
         self.pressed_keys = set()
 
-    def start(self):
+    def initialize(self):
         self.game_state_info = next(self.entities.get_by_class(GameStateInfo))
 
-    def update(self):
+    def proc(self):
         for event in self.event_getter(self.event_types):
             event_type = event.type
             event_key = getattr(event, 'key', None)
@@ -250,6 +250,6 @@ class SysDraw(System):
         self.entities = entities
         self.screen = screen
 
-    def update(self):
+    def proc(self):
         for visible_entity in self.entities.get_by_class(Table, Score, Ball, Racket, Spark):
             self.screen.blit(visible_entity.sprite.image, (visible_entity.x, visible_entity.y))

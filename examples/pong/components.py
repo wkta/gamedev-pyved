@@ -1,7 +1,7 @@
 from pygame.sprite import Sprite
-from ecs_pattern import component
 
 from consts import Team
+from pyved import component
 
 
 @component
