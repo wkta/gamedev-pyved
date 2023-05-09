@@ -1,17 +1,21 @@
-# from distutils.core import setup
+import sys
+from pathlib import Path
 
 from setuptools import setup
 
-import sys
+
 sys.path.append('src')
 from pyved.ver_info import version_num
 
+# - fetch data from requirements.txt
+with open('requirements.txt') as f:
+    required = f.read().splitlines()
 
 # read the contents of the README file
-from pathlib import Path
+
+
 this_directory = Path(__file__).parent
 long_desc = (this_directory / "README.md").read_text()
-
 
 setup(
     name="pyved",
@@ -23,10 +27,12 @@ setup(
     long_description=long_desc,
     long_description_content_type='text/markdown',
 
-    package_dir={'':'src'},
+    install_requires=required,
+
+    package_dir={'': 'src'},
     packages=[
         "pyved",
-        ],
+    ],
     include_package_data=True,  # to be sure we get _sm_shelf/legacy.py, etc.
 
     description='experimental toolbox for game devs who use python',
