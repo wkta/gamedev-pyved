@@ -76,7 +76,7 @@ def gen_edition_title(file, project_name):
 class MiniGamesApp:
     def __init__(self):
         pygame.init()
-
+        pygame.display.set_caption('Pyved: game creation toolbox')
         self.root_window_surface = pygame.display.set_mode((APP_W, APP_H))
 
         self.background_surface = pygame.Surface((APP_W, APP_H)).convert()
@@ -100,7 +100,7 @@ class MiniGamesApp:
         else:
             pure_dir = '??'
         self.notepad_window = UIWindow(pygame.Rect(50, 20, 380, 400), window_display_title=gen_edition_title(target_file, pure_dir))
-        output_window = UIWindow(pygame.Rect(440, 20, 380, 400), window_display_title="Pygame GUI Formatted Text")
+        output_window = UIWindow(pygame.Rect(440, 20, 380, 400), window_display_title="Score")
 
         self.text_entry_box = UITextEntryBox(  # swap to editable text box
                 relative_rect=pygame.Rect((0, 0), self.notepad_window.get_container().get_size()),
