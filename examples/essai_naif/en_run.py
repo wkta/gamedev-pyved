@@ -1,30 +1,51 @@
 import pygame
-
 import pyved as pyv
-from en_entities import Player
-from en_systems import SysInput, SysEntityMover, SysGraphicalRepr
+from naif_entities import Player, PlayersEvListener, HudScore, HudEvListener
+from en_systems import SysInput, SysEvent, SysEntityMover, SysGraphicalRepr, SysGamestate
+import ndefs
+import naif_util
 
 
-# ---
 def run_game():
-    tester = Player(
-        x=0, y=256, max_hp=125, hp=None, li_perks=['toughGuy', 'kamikaze'],
-        vx=0.0, vy=0.0
-    )
-    print(tester)
+    pyv.init()  # init all imported pygame modules
+    pyv.get_ev_manager().setup(ndefs.MyEvTypes)
 
-    pygame.init()  # init all imported pygame modules
+    # --- init PLAYER
+    player_2drepr = pygame.surface.Surface((32, 32))
+    player_2drepr.fill((255, 0, 255))
+    pygame.draw.circle(player_2drepr, 'pink', (16, 16), 15)
+    player_2drepr.set_colorkey((255, 0, 255))
+
+    pl_obj = Player(
+        image=player_2drepr,
+        num_lives=3,
+        x=0, y=256, max_hp=125, hp=100, li_perks=['toughGuy', 'kamikaze'],
+        vx=0.0, vy=0.0,
+        ev_buffer=[], ev_listener=PlayersEvListener().bind()
+    )
+    print(pl_obj)
+
+    # --- init HUD
+    hud = HudScore(
+        x=380, y=16,
+        image=naif_util.font_render(f'#Lives = {pl_obj.num_lives}'),
+        ev_buffer=[], ev_listener=HudEvListener().bind()
+    )
+
     pygame.display.set_caption('Pong')
-    screen = pygame.display.set_mode((800, 500))  # w h
+    screen = pyv.get_surface()  # pygame.display.set_mode((800, 500))  # w h
     clock = pygame.time.Clock()
 
     entities_mger = pyv.EntityManager()
     entities_mger.add(
-        tester
+        pl_obj, hud
     )
 
+    gs = SysGamestate(entities_mger)
     system_manager = pyv.SystemManager([
-        SysInput(entities_mger),
+        gs,
+        SysInput(entities_mger, gs),
+        SysEvent(entities_mger),
         SysEntityMover(entities_mger),
         SysGraphicalRepr(entities_mger, screen)
     ])
@@ -37,9 +58,9 @@ def run_game():
     #    system_manager.update_systems()
     #    pygame.display.flip()  # draw changes on screen
 
-    while not system_manager['SysInput'].gameover:
+    while not gs.gameover:
         system_manager.proc_all()
-        pygame.display.flip()
+        pyv.flip()
         clock.tick_busy_loop(60)
 
     system_manager.cleanup_all()

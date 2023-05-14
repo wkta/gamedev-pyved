@@ -1,6 +1,15 @@
 from typing import Iterable
 
+import pyved
 from pyved import component, entity
+
+
+pygame = pyved.pygame_proxy()
+
+
+@component
+class Repr2d:
+    image: pygame.Surface
 
 
 @component
@@ -19,6 +28,7 @@ class Speed:
 class Health:
     max_hp: int
     hp: int
+    num_lives: int
 
 
 @component
@@ -26,7 +36,7 @@ class Perks:
     li_perks: Iterable[str]
 
 
-# --- def entités ---
-@entity
-class Player(Health, Perks, Position, Speed):
-    pass
+@component
+class MessagingCompo:
+    ev_listener: int  # object
+    ev_buffer: list
