@@ -1,11 +1,16 @@
 import sys
 from pathlib import Path
-
+import os
 from setuptools import setup
 
 
+def get_version():
+    with open(os.path.join('src','pyved','VERSION')) as version_file:
+        return version_file.read().strip()
+
+
 sys.path.append('src')
-import pyved
+# import pyved
 
 # - fetch data from requirements.txt
 with open('requirements.txt') as f:
@@ -33,11 +38,12 @@ setup(
     packages=[
         "pyved",
     ],
+
     include_package_data=True,  # to be sure we get _sm_shelf/legacy.py, etc.
 
     description='experimental toolbox for game devs who use python',
     license='LGPL-3.0',
-    version=str(pyved.__version__),
+    version=str(get_version()),
 
     entry_points={
         'console_scripts': [
