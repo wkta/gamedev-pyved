@@ -6,7 +6,11 @@ import pygame
 from pygame_gui.windows import UIFileDialog, UIMessageWindow
 from pygame_gui import UI_BUTTON_START_PRESS, UI_WINDOW_MOVED_TO_FRONT, UI_WINDOW_CLOSE
 from pygame_gui import UI_FILE_DIALOG_PATH_PICKED
-from . import __version__ as pyved_ver_num
+
+from . import utils
+
+
+
 # from ui.ui_canvas_window import CanvasWindow
 # from ui.ui_new_canvas_dialog import UINewCanvasDialog
 # from tools.undo_record import UndoRecord
@@ -14,7 +18,7 @@ from . import __version__ as pyved_ver_num
 ABOUT_MSG = '<b>Pyved for Game Development</b><br>'\
             '********<br>' \
             '<b>Authors: </b>moonb3ndr et al.<br>' \
-            f"<b>Version: </b>{pyved_ver_num}<br>"\
+            f"<b>Version: </b>{utils.get_version()}<br>"\
             '<b>License: </b>Gnu LGPL v3.0<br>'
 
 

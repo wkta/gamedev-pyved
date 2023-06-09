@@ -7,6 +7,7 @@ from pygame_gui.elements.ui_image import UIImage
 from pygame_gui import UIManager, UI_TEXT_ENTRY_CHANGED
 from pygame_gui.elements import UIWindow, UITextEntryBox, UITextBox
 from .menu_bar_gui import UIMenuBar, menu_data
+
 from . import menu_bar_ev_handler
 
 from .pong.pong import PongGame
@@ -81,7 +82,7 @@ class MiniGamesApp:
 
         self.background_surface = pygame.Surface((APP_W, APP_H)).convert()
         self.background_surface.fill(pygame.Color('#505050'))
-        self.ui_manager = UIManager((APP_W, APP_H), 'data/ui_theme.json')
+        self.ui_manager = UIManager((APP_W, APP_H), os.path.join(os.path.dirname(__file__),'gui-rel-data/ui_theme.json'))
         self.clock = pygame.time.Clock()
         self.is_running = True
 
