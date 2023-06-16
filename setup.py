@@ -1,16 +1,18 @@
+import os
 import sys
 from pathlib import Path
-import os
+
 from setuptools import setup
 
 
+# almost duplicate but its on purpose (see pyved/utils.py)
 def get_version():
-    with open(os.path.join('src','pyved','VERSION')) as version_file:
+    with open(os.path.join('src', 'pyved', 'data', 'VERSION')) as version_file:
         return version_file.read().strip()
 
 
 sys.path.append('src')
-# import pyved
+
 
 # - fetch data from requirements.txt
 with open('requirements.txt') as f:
@@ -39,7 +41,7 @@ setup(
         "pyved",
     ],
 
-    package_data={'': ['pyved/VERSION']},
+    package_data={'': ['data/VERSION']},
     include_package_data=True,  # to be sure we also install non-py files...
 
     description='experimental toolbox for game devs who use python',
