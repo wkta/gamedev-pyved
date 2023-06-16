@@ -39,7 +39,8 @@ setup(
         "pyved",
     ],
 
-    include_package_data=True,  # to be sure we get _sm_shelf/legacy.py, etc.
+    package_data={'': ['src/pyved/VERSION']},
+    include_package_data=True,  # to be sure we also install non-py files...
 
     description='experimental toolbox for game devs who use python',
     license='LGPL-3.0',
