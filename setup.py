@@ -39,7 +39,7 @@ setup(
         "pyved",
     ],
 
-    package_data={'': ['src/pyved/VERSION']},
+    package_data={'': ['pyved/VERSION']},
     include_package_data=True,  # to be sure we also install non-py files...
 
     description='experimental toolbox for game devs who use python',
