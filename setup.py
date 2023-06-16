@@ -20,6 +20,10 @@ with open('requirements.txt') as f:
 
 # read the contents of the README file
 
+pck_list = [
+    "pyved",
+    "pyved.pong",
+]
 
 this_directory = Path(__file__).parent
 long_desc = (this_directory / "README.md").read_text()
@@ -37,11 +41,9 @@ setup(
     install_requires=required,
 
     package_dir={'': 'src'},
-    packages=[
-        "pyved",
-    ],
+    packages=pck_list,
 
-    package_data={'': ['data/VERSION']},
+    package_data={'': ['data/VERSION', 'gui-rel-data/*']},
     include_package_data=True,  # to be sure we also install non-py files...
 
     description='experimental toolbox for game devs who use python',
