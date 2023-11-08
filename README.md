@@ -3,11 +3,13 @@
 A new Game Creation toolbox (+the associated visual editor) 100% based on Python.
 **And it’s open-source**
 
+
 ## Installation for end users
 
 ```
 pip get install pyved
 ```
+
 
 ## Getting started (the Dev mode)
 
@@ -15,7 +17,6 @@ pip get install pyved
 git clone https://github.com/wkta/gamedev-pyved.git
 
 # create a separate different folder, create a virtual environment!
-cd ..
 mkdir testing-pyved
 cd testing-pyved
 python -m venv venv
@@ -53,4 +54,4 @@ You can create pull requests directly, or send an e-mail to thomas.iw@kata.games
 ### (Recipe for the core team)
 
 1. create a PYTHON package using `make_package.bat` (uses `setup.py`+the whole folder)
-1. after extensive testing under virtual env, publish the release with: `twine upload dist/*`
+2. after extensive testing under virtual env, publish the release with: `twine upload dist/*`
