@@ -1,24 +1,21 @@
-from typing import Union, List
 from pathlib import Path
-
+from . import glvars
 import pygame
-
-from pygame_gui.windows import UIFileDialog, UIMessageWindow
 from pygame_gui import UI_BUTTON_START_PRESS, UI_WINDOW_MOVED_TO_FRONT, UI_WINDOW_CLOSE
 from pygame_gui import UI_FILE_DIALOG_PATH_PICKED
+from pygame_gui.windows import UIFileDialog, UIMessageWindow
 
 from . import utils
 
+# from typing import Union
+from .gui_addon.ui_canvas_window import UINewCanvasDialog
 
-
-# from ui.ui_canvas_window import CanvasWindow
 # from ui.ui_new_canvas_dialog import UINewCanvasDialog
 # from tools.undo_record import UndoRecord
-
-ABOUT_MSG = '<b>Pyved for Game Development</b><br>'\
+ABOUT_MSG = '<b>Pyved for Game Development</b><br>' \
             '********<br>' \
             '<b>Authors: </b>moonb3ndr et al.<br>' \
-            f"<b>Version: </b>{utils.get_version()}<br>"\
+            f"<b>Version: </b>{utils.get_version()}<br>" \
             '<b>License: </b>Gnu LGPL v3.0<br>'
 
 
@@ -30,7 +27,7 @@ class MenuBarEventHandler:
 
         self.last_used_file_path = str(Path('.').absolute())
 
-        self.active_canvas_window = None  # type: Union[CanvasWindow, None]
+        self.active_canvas_window = None  # de type Union[CanvasWindow, None]
 
     def process_event(self, event):
         if (event.type == UI_WINDOW_MOVED_TO_FRONT
@@ -45,8 +42,8 @@ class MenuBarEventHandler:
                 and event.ui_object_id == 'menu_bar.#file_menu_items.#new'):
             new_canvas_dialog = pygame.Rect(0, 0, 400, 300)
             new_canvas_dialog.center = self.window_surface.get_rect().center
-            UINewCanvasDialog(rect=new_canvas_dialog,
-                              manager=self.ui_manager)
+            print('kikoo')
+            UINewCanvasDialog(rect=new_canvas_dialog, manager=self.ui_manager)
 
         if (event.type == UI_BUTTON_START_PRESS
                 and event.ui_object_id == 'menu_bar.#file_menu_items.#open'):
@@ -95,6 +92,10 @@ class MenuBarEventHandler:
             save_dialog.set_blocking(True)
 
         if (event.type == UI_BUTTON_START_PRESS
+                and event.ui_object_id == 'menu_bar.#file_menu_items.#quitapp'):
+            glvars.is_running = False
+
+        if (event.type == UI_BUTTON_START_PRESS
                 and event.ui_object_id == 'menu_bar.#edit_menu_items.#undo'
                 and self.active_canvas_window is not None):
             self._try_undo()
@@ -105,25 +106,31 @@ class MenuBarEventHandler:
             self._try_redo()
 
         if (event.type == UI_BUTTON_START_PRESS
-                and event.ui_object_id == 'menu_bar.#view_menu_items.#info'
-                and self.active_canvas_window is not None):
-            info_window_rect = pygame.Rect(0, 0, 400, 250)
-            info_window_rect.center = self.window_surface.get_rect().center
+                and event.ui_object_id == 'menu_bar.#actions_menu_items.#login'):
+            # and self.active_canvas_window is not None
 
-            file_name = self.active_canvas_window.window_display_title
-            pixel_size = (str(self.active_canvas_window.canvas_ui.rect.width) +
-                          ' x ' +
-                          str(self.active_canvas_window.canvas_ui.rect.height) +
-                          ' pixels.')
+            # --- Le code ci-dessous ouvrait une msg window qui affiche simplement
+            # des info. Aucune action spéciale est faisable.
 
-            UIMessageWindow(rect=info_window_rect,
-                            html_message='<br><b>Image Info</b><br>'
-                                         '---------------<br><br>'
-                                         '<b>File Name: </b>' + file_name + '<br>'
-                                         '<b>Pixel size: ' + pixel_size + '<br>',
-                            manager=self.ui_manager,
-                            window_title='Image info')
+            # info_window_rect = pygame.Rect(0, 0, 400, 250)
+            # info_window_rect.center = self.window_surface.get_rect().center
+            #
+            # file_name = self.active_canvas_window.window_display_title
+            # pixel_size = (str(self.active_canvas_window.canvas_ui.rect.width) +
+            #               ' x ' +
+            #               str(self.active_canvas_window.canvas_ui.rect.height) +
+            #               ' pixels.')
+            # UIMessageWindow(rect=info_window_rect,
+            #                 html_message='<br><b>Image Info</b><br>'
+            #                              '---------------<br><br>'
+            #                              '<b>File Name: </b>' + file_name + '<br>'
+            #                                                                 '<b>Pixel size: ' + pixel_size + '<br>',
+            #                 manager=self.ui_manager,
+            #                 window_title='Image info')
 
+            # TODO ouverture modal avec Login process
+            print('time to open the Login modal ... Todo!')
+            pass
         if (event.type == UI_BUTTON_START_PRESS
                 and event.ui_object_id == 'menu_bar.#help_menu_items.#about'):
             about_window_rect = pygame.Rect(0, 0, 400, 250)
@@ -149,9 +156,9 @@ class MenuBarEventHandler:
                 message_window = UIMessageWindow(rect=message_rect,
                                                  html_message='Unable to save image to path: '
                                                               '<br>' + str(path) + '<br><br>'
-                                                              'pygame can only save to .bmp, .png,'
-                                                              '.jpg & .tga. TGA is the default '
-                                                              'format.',
+                                                                                   'pygame can only save to .bmp, .png,'
+                                                                                   '.jpg & .tga. TGA is the default '
+                                                                                   'format.',
                                                  manager=self.ui_manager,
                                                  window_title='Saving error')
                 message_window.set_blocking(True)
@@ -188,5 +195,4 @@ class MenuBarEventHandler:
             undo_record = UndoRecord(undo_surf, redo_record.rect.copy())
             self.active_canvas_window.canvas_ui.undo_stack.append(undo_record)
 
-            self.active_canvas_window.canvas_ui.get_image().blit(redo_record.image,
-                                                                 redo_record.rect)
+            self.active_canvas_window.canvas_ui.get_image().blit(redo_record.image, redo_record.rect)

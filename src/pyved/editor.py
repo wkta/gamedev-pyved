@@ -1,5 +1,6 @@
 import pygame
 import pygame_gui
+from . import glvars
 
 # from pygame_gui.ui_manager import UIManager
 # from pygame_gui.elements.ui_window import UIWindow
@@ -84,8 +85,6 @@ class MiniGamesApp:
         self.background_surface.fill(pygame.Color('#505050'))
         self.ui_manager = UIManager((APP_W, APP_H), os.path.join(os.path.dirname(__file__),'gui-rel-data/ui_theme.json'))
         self.clock = pygame.time.Clock()
-        self.is_running = True
-
         self.pong_window_1 = GamePreview(
             'Pong demo',
             POS_PREVIEW,
@@ -124,12 +123,12 @@ class MiniGamesApp:
         self.menu_bar_event_handler = menu_bar_ev_handler.MenuBarEventHandler(self.root_window_surface, self.ui_manager)
 
     def run(self):
-        while self.is_running:
+        while glvars.is_running:
             time_delta = self.clock.tick(60)/1000.0
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    self.is_running = False
+                    glvars.is_running = False
 
                 self.ui_manager.process_events(event)
 

@@ -1,11 +1,12 @@
 from typing import Union, Dict, Tuple
+
+import pygame
 import pygame_gui
-from pygame_gui.core.interfaces import IContainerLikeInterface, IUIManagerInterface
 from pygame_gui.core import UIElement, UIContainer
 from pygame_gui.core.drawable_shapes import RectDrawableShape
+from pygame_gui.core.interfaces import IContainerLikeInterface, IUIManagerInterface
 from pygame_gui.elements.ui_button import UIButton
 from pygame_gui.elements.ui_selection_list import UISelectionList
-import pygame
 
 
 menu_data = {'#file_menu': {'display_name': 'File',
@@ -14,7 +15,8 @@ menu_data = {'#file_menu': {'display_name': 'File',
                                     '#new': {'display_name': 'New...'},
                                     '#open': {'display_name': 'Open...'},
                                     '#save': {'display_name': 'Save'},
-                                    '#save_as': {'display_name': 'Save As...'}
+                                    '#save_as': {'display_name': 'Save As...'},
+                                    '#quitapp': {'display_name': 'Quit'}
                                 }
                             },
              '#edit_menu': {'display_name': 'Edit',
@@ -24,10 +26,10 @@ menu_data = {'#file_menu': {'display_name': 'File',
                                     '#redo': {'display_name': 'Redo'}
                                 }
                             },
-             '#view_menu': {'display_name': 'View',
+             '#actions_menu': {'display_name': 'Actions',
                             'items':
                                 {
-                                    '#info': {'display_name': 'Image info'}
+                                    '#login': {'display_name': 'Login'}
                                 }
                             },
              '#help_menu': {'display_name': 'Help',
